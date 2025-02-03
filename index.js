@@ -7,9 +7,17 @@ const port = process.env.PORT || 8080;
 
 server.use(middlewares);
 
-// Directly use routers without extra path prefixes
-server.use(router1);
-server.use(router2);
+// Route users.json under "/users"
+server.use("/users", (req, res, next) => {
+  req.url = req.url.replace(/^\/?/, "/users");
+  router1(req, res, next);
+});
+
+// Route tasks.json under "/tasks"
+server.use("/tasks", (req, res, next) => {
+  req.url = req.url.replace(/^\/?/, "/tasks");
+  router2(req, res, next);
+});
 
 server.listen(port, () => {
   console.log(`JSON Server is running on port ${port}`);
